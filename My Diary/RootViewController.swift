@@ -17,7 +17,7 @@ class RootViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1);
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         
-        self.setRightButton()
+//        self.setRightButton()
         
         
     }
@@ -45,52 +45,16 @@ class RootViewController: UIViewController {
         
     }
     
-    func setRightButton() {
+    func setRightButton(title: String?, image: String?, action: Selector) {
         
         let button = UIButton(type: .system)
         button.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        
-        
-        
-        //        if title?.lowercased() == "add" {
-        //
-        //        button.setImage(UIImage(named: "plus.png"), for: .normal)
-        //
-        //        }else if title?.lowercased() == "previous"{
-        //
-        //            button.setTitle(title, for: .normal)
-        //            button.setImage(UIImage(named: "back.png"), for: .normal)
-        //            button.imageView?.contentMode = .center
-        //            button.sizeToFit()
-        //
-        //        }else if title?.lowercased() == "next"{
-        //
-        //            button.setTitle(title, for: .normal)
-        //            button.imageView?.contentMode = .scaleAspectFit
-        //            button.setImage(UIImage(named: "more.png"), for: .normal)
-        //            button.semanticContentAttribute = .forceRightToLeft
-        //            button.sizeToFit()
-        //
-        //        }else{
-        //
-        //            button.setTitle(title, for: .normal)
-        //
-        //        }
-        
-        //         button.setImage(UIImage(named: "calendar.png"), for: .normal)
-        //        button.tintColor = UIColor.white
-        //        button.imageView?.contentMode = .scaleAspectFit
-        //        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
-        let rightButton = UIBarButtonItem(image: UIImage.init(named: "calendar.png"), style: .plain, target: self, action: #selector(openMenuDrawer))
-        
-        button.tintColor = UIColor.white
+        button.setTitle(title, for: .normal)
+        button.setImage(UIImage(named: image!), for: .normal)
         button.imageView?.contentMode = .center
-        navigationItem.rightBarButtonItems = [rightButton]
-        self.navigationItem.title = "My Diary"
-        
-        
-        //        button.addTarget(self, action: action, for: .touchUpInside)
-        
+        button.sizeToFit()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+        button.addTarget(self, action: action, for: .touchUpInside)
         
     }
     

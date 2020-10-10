@@ -11,6 +11,7 @@ class HomeController: RootViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setRightButton(title: "", image: "calendar.png", action:#selector(doSomething) )
 
         // Do any additional setup after loading the view.
     }
@@ -22,6 +23,10 @@ class HomeController: RootViewController {
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: false, completion: nil)
  
+    }
+    
+    @objc func doSomething(){
+        print("ok boss")
     }
     
     /*

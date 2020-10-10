@@ -8,28 +8,26 @@
 import UIKit
 
 class DiaryIEntryController: RootViewController{
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//    }
-    
+
+        var array = [Any]()
+//    var array = ["Any"]
+
   
-//        lazy var collectionView:UICollectionView = {
-//        let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
-//        layout.scrollDirection = .horizontal
-//        let cv = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
-//        cv.translatesAutoresizingMaskIntoConstraints = false
-//        cv.showsHorizontalScrollIndicator = false
-//        cv.setCollectionViewLayout(layout, animated: false)
-//        cv.delegate = self
-//        cv.dataSource = self
-//        cv.register(EntryViewCell.self, forCellWithReuseIdentifier: "CardCollectionViewCell")
-//        cv.backgroundColor = .clear
-//        cv.isPagingEnabled = true
-//        cv.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-//        return cv
-//    }()
+        lazy var collectionView:UICollectionView = {
+        let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
+        layout.scrollDirection = .horizontal
+        let cv = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
+        cv.translatesAutoresizingMaskIntoConstraints = false
+        cv.showsHorizontalScrollIndicator = false
+        cv.setCollectionViewLayout(layout, animated: false)
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(imageCell.self, forCellWithReuseIdentifier: "cell")
+        cv.backgroundColor = .red
+        cv.isPagingEnabled = true
+        cv.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        return cv
+    }()
     
     lazy var subView : UIView = {
         
@@ -49,11 +47,23 @@ class DiaryIEntryController: RootViewController{
     
     func setUp(){
         
-//        self.view.addSubview(collectionView)
+        self.setRightButton(title: "Camera", image: "", action:#selector(addImage) )
+        self.view.addSubview(collectionView)
 //        let subView = TextEntryView.init(frame: CGRect.zero)
-        view.addSubview(subView)
+//        view.addSubview(collecttionView)
         self.setUpConstraints()
 
+    }
+    
+    @objc func addImage(){
+        
+        let picker = UIImagePickerController.init()
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
+        
+        
         
         
         
@@ -62,32 +72,75 @@ class DiaryIEntryController: RootViewController{
     
     func setUpConstraints(){
             
-//            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            collectionView.heightAnchor.constraint(equalToConstant: 620),
+        collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+              collectionView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+
+        
             
 //            subView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 //            subView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
 //            subView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
 //            subView.heightAnchor.constraint(equalToConstant: 620),
             
-        subView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        subView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+//        subView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+//        subView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
 
 
             
             
     }
 
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UICollectionViewDelegateFlowLayout{
+    
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(array)
+        return array.count
     }
-    */
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! imageCell
+        cell.data = array[indexPath.row]  as! URL
+//        cell.cardView.transform = .identity
+        return cell
+     }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
+        let imageUrl = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerReferenceURL")];
+        array.append(imageUrl as Any)
+        print(array)
+        self.dismiss(animated: true, completion: {
+
+            self.collectionView.reloadData()
+
+        })
+
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
