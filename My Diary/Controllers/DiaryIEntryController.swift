@@ -9,14 +9,14 @@ import UIKit
 
 class DiaryIEntryController: RootViewController{
 
-        var array = [Any]()
-//    var array = ["Any"]
+        var array = [URL]()
+        var imageDirectory:URL!
 
   
         lazy var collectionView:UICollectionView = {
         let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
         layout.scrollDirection = .horizontal
-        let cv = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.showsHorizontalScrollIndicator = false
         cv.setCollectionViewLayout(layout, animated: false)
@@ -24,8 +24,8 @@ class DiaryIEntryController: RootViewController{
         cv.dataSource = self
         cv.register(imageCell.self, forCellWithReuseIdentifier: "cell")
         cv.backgroundColor = .red
-        cv.isPagingEnabled = true
-        cv.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+//        cv.isPagingEnabled = true
+//        cv.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         return cv
     }()
     
@@ -72,10 +72,10 @@ class DiaryIEntryController: RootViewController{
     
     func setUpConstraints(){
             
-        collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
+        collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-              collectionView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+              collectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
 
         
             
@@ -107,18 +107,28 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! imageCell
-        cell.data = array[indexPath.row]  as! URL
+        cell.data = array[indexPath.row]
 //        cell.cardView.transform = .identity
         return cell
      }
     
+    func collectionView(_ collectionView: UICollectionView,
+                           layout collectionViewLayout: UICollectionViewLayout,
+                           sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+       }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
-        let imageUrl = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerReferenceURL")];
-        array.append(imageUrl as Any)
-        print(array)
-        self.dismiss(animated: true, completion: {
-
+        if let img = info[.originalImage] {
+            
+            self.createDirecotry(image: img as! UIImage)
+            array.append(self.imageDirectory)
+            print(array)
+ 
+         }
+        self.dismiss(animated: true, completion: { [self] in
+            
             self.collectionView.reloadData()
 
         })
@@ -129,7 +139,30 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
         self.dismiss(animated: true, completion: nil)
     }
     
-    
+    func createDirecotry(image : UIImage){
+        
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let folderDirectory = documentsDirectory.appendingPathComponent("visionSense")
+        let success = FileManager.default.fileExists(atPath: folderDirectory.path) as Bool
+        if success == false {
+            do {
+                try! FileManager.default.createDirectory(atPath: folderDirectory.path, withIntermediateDirectories: true, attributes: nil)
+            }
+        }
+        
+        let  imageName = String(format: "%@%x%@", "AIimage_",Int.random(in: 1..<5000),".png")
+        self.imageDirectory = folderDirectory.appendingPathComponent(imageName)
+        if let data = image.jpegData(compressionQuality:  0),
+            !FileManager.default.fileExists(atPath: imageDirectory.path) {
+            do {
+                // writes the image data to disk
+                try data.write(to: imageDirectory)
+                
+            } catch {
+                print("error saving file: ", error)
+            }
+        }
+    }
     
     
     

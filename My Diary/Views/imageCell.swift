@@ -29,7 +29,7 @@ class imageCell : UICollectionViewCell {
         img.translatesAutoresizingMaskIntoConstraints = false
         img.clipsToBounds = true
         img.contentMode = .scaleAspectFit
-        img.layer.cornerRadius = 20
+//        img.layer.cornerRadius = 20
         return img
     }()
     
@@ -74,7 +74,7 @@ class imageCell : UICollectionViewCell {
         guard let data = data else {return}
 //        overlayView.backgroundColor = data.overlayBackground
         cardImage.image =
-        self.getImage(url: data as URL)
+        self.getImage(url: data)
 //        brandName.text = data.brandName
 //        setUpAttributeText(data.rating, data.category, data.priceTrend)
 //        label.text = data
@@ -84,22 +84,11 @@ class imageCell : UICollectionViewCell {
     func getImage(url:URL)->UIImage{
         
         var img = UIImage()
-        // retrieve the list of matching results for your asset url
-        let fetchResult = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil)
-        if let photo = fetchResult.firstObject {
-
-            // retrieve the image for the first result
-            PHImageManager.default().requestImage(for: photo, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) {
-                image, info in
-
-                img = image!
-            }
-   
+        let fileURL = url
+        if let imageData = NSData(contentsOf: fileURL) {
+            img = UIImage(data: imageData as Data)! // Here you can attach image to UIImageView
+        }
+       return img
     }
-        return img//here is the image
 
-    
-    
-    
-}
 }
