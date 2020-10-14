@@ -11,6 +11,10 @@ class DiaryIEntryController: RootViewController{
 
         var array = [URL]()
         var imageDirectory:URL!
+        var textHeightConstraint: NSLayoutConstraint!
+        var cvHeightConstraint: NSLayoutConstraint!
+
+
 
   
         lazy var collectionView:UICollectionView = {
@@ -27,6 +31,18 @@ class DiaryIEntryController: RootViewController{
 //        cv.isPagingEnabled = true
 //        cv.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         return cv
+    }()
+    
+    lazy var txtView:UITextView = {
+        
+        let tv = UITextView.init(frame: .zero)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        tv.isScrollEnabled = true
+        tv.delegate = self
+        tv.backgroundColor = UIColor.green
+        return tv
+
     }()
     
     lazy var subView : UIView = {
@@ -49,8 +65,7 @@ class DiaryIEntryController: RootViewController{
         
         self.setRightButton(title: "Camera", image: "", action:#selector(addImage) )
         self.view.addSubview(collectionView)
-//        let subView = TextEntryView.init(frame: CGRect.zero)
-//        view.addSubview(collecttionView)
+        self.view.addSubview(txtView)
         self.setUpConstraints()
 
     }
@@ -72,10 +87,18 @@ class DiaryIEntryController: RootViewController{
     
     func setUpConstraints(){
             
-        collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-              collectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        self.cvHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
+        self.cvHeightConstraint.isActive = true
+
+
+        txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        txtView.topAnchor.constraint(equalTo: collectionView.bottomAnchor).isActive = true
+        self.textHeightConstraint = txtView.heightAnchor.constraint(equalToConstant: 200)
+        self.textHeightConstraint.isActive = true
 
         
             
@@ -94,13 +117,17 @@ class DiaryIEntryController: RootViewController{
 
 }
 
-extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UICollectionViewDelegateFlowLayout{
+extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UICollectionViewDelegateFlowLayout,UITextViewDelegate{
     
     
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(array)
+        if array.count > 0 {
+            
+            cvHeightConstraint.constant = 300
+            
+        }
         return array.count
     }
     
@@ -166,7 +193,26 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
     
     
     
-    
+    func textViewDidChange(_ textView: UITextView) {
+           self.adjustTextViewHeight()
+       }
+
+       func adjustTextViewHeight() {
+        let cvHeight = collectionView.frame.height
+        let tvHeight = txtView.frame.height
+        let viewHeight = self.view.frame.height
+        print(cvHeight + tvHeight + 70)
+        print(viewHeight)
+        
+        if cvHeight + tvHeight + 70 < viewHeight {
+            
+            let fixedWidth = txtView.frame.size.width
+            let newSize = txtView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+            self.textHeightConstraint.constant = newSize.height
+            self.view.layoutIfNeeded()
+            
+        }
+       }
     
     
     

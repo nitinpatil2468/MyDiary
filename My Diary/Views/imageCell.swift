@@ -28,7 +28,7 @@ class imageCell : UICollectionViewCell {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
         img.clipsToBounds = true
-        img.contentMode = .scaleAspectFit
+        img.contentMode = .scaleAspectFill
 //        img.layer.cornerRadius = 20
         return img
     }()
