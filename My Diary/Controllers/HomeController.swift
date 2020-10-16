@@ -11,7 +11,8 @@ class HomeController: RootViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setRightButton(title: "", image: "calendar.png", action:#selector(doSomething) )
+        let rightButton = buttonData.init(title: "Calender", image: "Calender.png", action: #selector(doSomething))
+        self.setRightButton(array: [rightButton])
 
         // Do any additional setup after loading the view.
     }

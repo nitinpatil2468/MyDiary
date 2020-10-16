@@ -8,14 +8,21 @@
 
 import UIKit
 
+struct buttonData {
+    
+    var title : String?
+    var image :String?
+    var action : Selector?
+}
+
 class RootViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235)
-        self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1);
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.9922418153, green: 0.9401817535, blue: 0.7990587617, alpha: 1)
+        self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1);
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1)]
         
 //        self.setRightButton()
         
@@ -45,16 +52,42 @@ class RootViewController: UIViewController {
         
     }
     
-    func setRightButton(title: String?, image: String?, action: Selector) {
+    func setRightButton(array : [buttonData]) {
         
-        let button = UIButton(type: .system)
-        button.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        button.setTitle(title, for: .normal)
-        button.setImage(UIImage(named: image!), for: .normal)
-        button.imageView?.contentMode = .center
-        button.sizeToFit()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
-        button.addTarget(self, action: action, for: .touchUpInside)
+        var buttonsArray = [UIBarButtonItem]()
+        for data in array{
+            
+            let button = UIButton(type: .system)
+            button.tintColor = #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1)
+            button.setImage(UIImage(named: data.image!), for: .normal)
+            button.imageView?.contentMode = .center
+            button.sizeToFit()
+            button.addTarget(self, action: data.action!, for: .touchUpInside)
+            let rightButton = UIBarButtonItem(customView: button)
+            buttonsArray.append(rightButton)
+            
+        }
+        self.navigationItem.rightBarButtonItems = buttonsArray
+
+    }
+    
+    func setLeftButton(array : [buttonData]) {
+        
+        var buttonsArray = [UIBarButtonItem]()
+        for data in array{
+            
+            let button = UIButton(type: .system)
+            button.tintColor = #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1)
+            button.setImage(UIImage(named: data.image!), for: .normal)
+            button.imageView?.contentMode = .center
+            button.sizeToFit()
+            button.addTarget(self, action: data.action!, for: .touchUpInside)
+            let leftButton = UIBarButtonItem(customView: button)
+            buttonsArray.append(leftButton)
+            
+        }
+        self.navigationItem.leftBarButtonItems = buttonsArray
+
         
     }
     
@@ -113,17 +146,17 @@ class RootViewController: UIViewController {
         }
     
     
-    func setLeftButton(title: String?, image: String?, action: Selector) {
-        
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "back.png"), for: .normal)
-        button.imageView?.contentMode = .center
-        button.setTitle(title, for: .normal)
-        button.sizeToFit()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
-        button.addTarget(self, action: action, for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
-        button.addTarget(self, action: action, for: .touchUpInside)
-        
-    }
+//    func setLeftButton(title: String?, image: String?, action: Selector) {
+//        
+//        let button = UIButton(type: .system)
+//        button.setImage(UIImage(named: "back.png"), for: .normal)
+//        button.imageView?.contentMode = .center
+//        button.setTitle(title, for: .normal)
+//        button.sizeToFit()
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
+//        button.addTarget(self, action: action, for: .touchUpInside)
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+//        button.addTarget(self, action: action, for: .touchUpInside)
+//        
+//    }
 }

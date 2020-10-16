@@ -27,7 +27,7 @@ class DiaryIEntryController: RootViewController{
         cv.delegate = self
         cv.dataSource = self
         cv.register(imageCell.self, forCellWithReuseIdentifier: "cell")
-        cv.backgroundColor = .red
+        cv.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 //        cv.isPagingEnabled = true
 //        cv.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         return cv
@@ -40,7 +40,7 @@ class DiaryIEntryController: RootViewController{
         tv.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         tv.isScrollEnabled = true
         tv.delegate = self
-        tv.backgroundColor = UIColor.green
+        tv.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         return tv
 
     }()
@@ -54,8 +54,8 @@ class DiaryIEntryController: RootViewController{
     }()
 
     override func viewDidLoad() {
+        self.view.backgroundColor = #colorLiteral(red: 0.9922418153, green: 0.9401817535, blue: 0.7990587617, alpha: 1)
         super.viewDidLoad()
-        view.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
         self.setUp()
 
         // Do any additional setup after loading the view.
@@ -63,7 +63,11 @@ class DiaryIEntryController: RootViewController{
     
     func setUp(){
         
-        self.setRightButton(title: "Camera", image: "", action:#selector(addImage) )
+        let addPhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(addImage))
+        let menu = buttonData.init(title: "Menu", image: "menu.png", action: #selector(addImage))
+        let back = buttonData.init(title: "Back", image: "back.png", action: #selector(addImage))
+        self.setLeftButton(array: [back])
+        self.setRightButton(array: [menu,addPhoto])
         self.view.addSubview(collectionView)
         self.view.addSubview(txtView)
         self.setUpConstraints()
@@ -94,9 +98,9 @@ class DiaryIEntryController: RootViewController{
         self.cvHeightConstraint.isActive = true
 
 
-        txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        txtView.topAnchor.constraint(equalTo: collectionView.bottomAnchor).isActive = true
+        txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        txtView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20).isActive = true
         self.textHeightConstraint = txtView.heightAnchor.constraint(equalToConstant: 200)
         self.textHeightConstraint.isActive = true
 
@@ -198,8 +202,9 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
        }
 
        func adjustTextViewHeight() {
+        
         let cvHeight = collectionView.frame.height
-        let tvHeight = txtView.frame.height
+        let tvHeight = textHeightConstraint.constant
         let viewHeight = self.view.frame.height
         print(cvHeight + tvHeight + 70)
         print(viewHeight)
