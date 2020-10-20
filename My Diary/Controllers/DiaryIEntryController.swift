@@ -47,10 +47,20 @@ class DiaryIEntryController: RootViewController{
     
     lazy var subView : UIView = {
         
-        let tv = TextEntryView.init(frame: CGRect.zero)
-        tv.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        let tv = SubView.init(frame: .zero)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         return tv
 
+    }()
+    
+    lazy var titleView :UIView = {
+        
+        let tv = TitleView.init(frame: .zero)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        return tv
+        
     }()
 
     override func viewDidLoad() {
@@ -65,11 +75,15 @@ class DiaryIEntryController: RootViewController{
         
         let addPhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(addImage))
         let menu = buttonData.init(title: "Menu", image: "menu.png", action: #selector(addImage))
-        let back = buttonData.init(title: "Back", image: "back.png", action: #selector(addImage))
+        let back = buttonData.init(title: "Back", image: "back.png", action: #selector(dissmiss))
         self.setLeftButton(array: [back])
         self.setRightButton(array: [menu,addPhoto])
+        self.view.addSubview(subView)
+        self.view.addSubview(titleView)
         self.view.addSubview(collectionView)
         self.view.addSubview(txtView)
+
+
         self.setUpConstraints()
 
     }
@@ -81,11 +95,13 @@ class DiaryIEntryController: RootViewController{
         picker.allowsEditing = true
         picker.delegate = self
         self.present(picker, animated: true, completion: nil)
+   
+    }
+    
+    @objc func dissmiss(){
         
-        
-        
-        
-        
+        self.dismiss(animated: true, completion: nil)
+   
     }
     
     
@@ -97,12 +113,24 @@ class DiaryIEntryController: RootViewController{
         self.cvHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
         self.cvHeightConstraint.isActive = true
 
-
-        txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        txtView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20).isActive = true
-        self.textHeightConstraint = txtView.heightAnchor.constraint(equalToConstant: 200)
-        self.textHeightConstraint.isActive = true
+        subView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        subView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        subView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20).isActive = true
+        subView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        
+        titleView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        titleView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        titleView.topAnchor.constraint(equalTo: subView.bottomAnchor, constant: 0).isActive = true
+        titleView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        
+                txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+                txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+                txtView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 0).isActive = true
+                self.textHeightConstraint = txtView.heightAnchor.constraint(equalToConstant: 200)
+                self.textHeightConstraint.isActive = true
+        
+               
+        
 
         
             
@@ -207,24 +235,22 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
         let tvHeight = textHeightConstraint.constant
         let viewHeight = self.view.frame.height
         print(cvHeight + tvHeight + 70)
-        print(viewHeight)
+        
         
         if cvHeight + tvHeight + 70 < viewHeight {
             
+            print(cvHeight)
+            print(tvHeight)
+            print(viewHeight)
+            print(CGFloat.greatestFiniteMagnitude + tvHeight)
+
             let fixedWidth = txtView.frame.size.width
-            let newSize = txtView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+            let newSize = txtView.sizeThatFits(CGSize(width: fixedWidth, height: 100 + tvHeight))
+            print(newSize)
+
             self.textHeightConstraint.constant = newSize.height
             self.view.layoutIfNeeded()
             
         }
        }
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
