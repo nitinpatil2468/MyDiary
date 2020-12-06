@@ -10,13 +10,11 @@ import UIKit
 class DiaryIEntryController: RootViewController{
 
         var array = [URL]()
+        var urlStrings = [String]()
         var imageDirectory:URL!
         var textHeightConstraint: NSLayoutConstraint!
         var cvHeightConstraint: NSLayoutConstraint!
 
-
-
-  
         lazy var collectionView:UICollectionView = {
         let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
         layout.scrollDirection = .horizontal
@@ -39,13 +37,16 @@ class DiaryIEntryController: RootViewController{
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         tv.isScrollEnabled = true
+        tv.showsVerticalScrollIndicator = false
         tv.delegate = self
+        tv.font = UIFont(name: "GoogleSans-Regular", size: 18)
+        tv.contentInset = UIEdgeInsets(top: 0,left: 15,bottom: 0,right: 10);
         tv.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         return tv
 
     }()
     
-    lazy var subView : UIView = {
+    lazy var subView : SubView = {
         
         let tv = SubView.init(frame: .zero)
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -54,13 +55,24 @@ class DiaryIEntryController: RootViewController{
 
     }()
     
-    lazy var titleView :UIView = {
+    lazy var titleView :TitleView = {
         
         let tv = TitleView.init(frame: .zero)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         return tv
         
+    }()
+    
+    lazy var saveButton : UIButton = {
+        let btn  = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        btn.setImage(UIImage(named: "save.png"), for: .normal)
+        btn.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        btn.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        btn.addTarget(self, action: #selector(self.saveEntry), for: .touchUpInside)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.layer.cornerRadius = 30
+        return btn
     }()
 
     override func viewDidLoad() {
@@ -82,12 +94,52 @@ class DiaryIEntryController: RootViewController{
         self.view.addSubview(titleView)
         self.view.addSubview(collectionView)
         self.view.addSubview(txtView)
-
+        self.view.addSubview(saveButton)
+        
+        self.hideKeyboardWhenTappedAround()
 
         self.setUpConstraints()
 
     }
     
+    @objc func saveEntry(){
+        
+        print(titleView.titlefield.text as Any)
+        print(subView.datelbl.date)
+        print(subView.timelbl.date)
+        print(txtView.text as Any)
+        
+        
+        if let title = titleView.titlefield.text,
+            let details = txtView.text
+             {
+            var diaryEntry = [String:String]()
+
+            let dateStamp = (subView.datelbl.date.timeIntervalSince1970 * 1000).rounded()
+            let timeStamp = (subView.timelbl.date.timeIntervalSince1970 * 1000).rounded()
+            
+            diaryEntry["title"] = title
+            diaryEntry["dateStamp"] = String(dateStamp)
+            diaryEntry["timeStamp"] = String(timeStamp)
+            diaryEntry["photoUrl"] = urlStrings.joined(separator: ", ")
+            diaryEntry["detail"] = details
+            
+            EntryDBHelper.sharedInstance.addNewEntry(object: diaryEntry)
+            let ok =  EntryDBHelper.sharedInstance.getEntries()
+
+
+
+            
+            
+        }
+        
+
+
+
+        
+    }
+
+
     @objc func addImage(){
         
         let picker = UIImagePickerController.init()
@@ -106,13 +158,13 @@ class DiaryIEntryController: RootViewController{
     
     
     func setUpConstraints(){
-            
+        
         collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         self.cvHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
         self.cvHeightConstraint.isActive = true
-
+        
         subView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         subView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         subView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20).isActive = true
@@ -123,28 +175,38 @@ class DiaryIEntryController: RootViewController{
         titleView.topAnchor.constraint(equalTo: subView.bottomAnchor, constant: 0).isActive = true
         titleView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
-                txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-                txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-                txtView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 0).isActive = true
-                self.textHeightConstraint = txtView.heightAnchor.constraint(equalToConstant: 200)
-                self.textHeightConstraint.isActive = true
+        txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        txtView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 0).isActive = true
+        self.textHeightConstraint = txtView.heightAnchor.constraint(equalToConstant: 200)
+        self.textHeightConstraint.isActive = true
         
-               
-        
-
-        
-            
-//            subView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-//            subView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-//            subView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-//            subView.heightAnchor.constraint(equalToConstant: 620),
-            
-//        subView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-//        subView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        saveButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
+        saveButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
+        saveButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
 
 
-            
-            
+//        saveButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+//        saveButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+
+        
+        
+        
+        
+        
+        
+        //            subView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        //            subView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        //            subView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        //            subView.heightAnchor.constraint(equalToConstant: 620),
+        
+        //        subView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        //        subView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        
+        
+        
+        
     }
 
 }
@@ -183,6 +245,7 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
             
             self.createDirecotry(image: img as! UIImage)
             array.append(self.imageDirectory)
+            urlStrings.append(self.imageDirectory.absoluteString)
             print(array)
  
          }

@@ -22,6 +22,12 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>GoogleSans-Bold.ttf</string>
+		<string>GoogleSans-Regular.ttf</string>
+		<string>GoogleSans-Medium.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

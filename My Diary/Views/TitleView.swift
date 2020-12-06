@@ -9,12 +9,13 @@ import UIKit
 
 class TitleView: UIView {
 
-    let titlefield : UITextField = {
+    var titlefield : UITextField = {
         
         let tf = UITextField.init(frame: .zero)
         tf.placeholder = "Title"
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = .white
+        tf.font = UIFont(name: "GoogleSans-Bold", size: 20)
         return tf
     }()
 

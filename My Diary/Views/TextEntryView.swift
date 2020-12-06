@@ -25,15 +25,31 @@ class TextEntryView: UIView {
          v.translatesAutoresizingMaskIntoConstraints = false
          return v
      }()
+    
+    let datePicker:UIDatePicker = {
+        
+        let d = UIDatePicker()
+        d.datePickerMode = .date
+        d.minimumDate = nil
+        d.addTarget(self, action: #selector(donedatePicker), for: .touchUpInside)
+        return d
+        
+    }()
      
    
-     let dateLabel:UILabel = {
-         let l = UILabel()
-         l.text = "10 - 15 min"
+    let dateLabel:UITextField = {
+        
+        let l = UITextField()
+        l.text = "10 - 15 min"
         l.backgroundColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
-         l.translatesAutoresizingMaskIntoConstraints = false
-         return l
-     }()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showDatePicker))
+        l.addGestureRecognizer(tap)
+        //        l.inputView = datep
+        
+        return l
+    }()
      
      let timeLabel:UILabel = {
          let l = UILabel()
@@ -44,6 +60,8 @@ class TextEntryView: UIView {
          l.font = UIFont.systemFont(ofSize: 17, weight: .regular)
          return l
      }()
+    
+
      
      override init(frame: CGRect) {
          super.init(frame:frame)
@@ -52,6 +70,24 @@ class TextEntryView: UIView {
 //         cardView.addSubview(TopBar)
          addSubview(cardView)
          setUpConstraints()
+     }
+    
+    
+
+    @objc func showDatePicker(){
+        
+        print("done bro")
+   }
+    
+    @objc func donedatePicker(){
+        let date = datePicker.date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMM d, yyyy"
+        let result = formatter.string(from: date)
+        dateLabel.text = result
+    }
+
+    @objc func cancelDatePicker(){
      }
      
      func setUpConstraints(){

@@ -9,34 +9,50 @@ import UIKit
 
 class SubView: UIView {
 
-    let timelbl : UILabel = {
+    lazy var timelbl : UIDatePicker = {
         
-        let lbl = UILabel()
-        lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.backgroundColor = .white
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d, yyyy"
-        let result = formatter.string(from: date)
-        lbl.text = result
-        let labelTap = UITapGestureRecognizer(target: self, action: #selector(setDate(_:)))
-         lbl.isUserInteractionEnabled = true
-        lbl.addGestureRecognizer(labelTap)
-        return lbl
+//        let lbl = UITextField()
+//        lbl.translatesAutoresizingMaskIntoConstraints = false
+//        lbl.backgroundColor = .white
+//        let date = Date()
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "EEEE, MMM d, yyyy"
+//        let result = formatter.string(from: date)
+//        lbl.text = result
+//        lbl.isUserInteractionEnabled = true
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        datePicker.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        datePicker.setDate(Date(), animated: false)
+        datePicker.addTarget(self, action: #selector(self.datePickerChanged(sender:)), for:.valueChanged)
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+//        lbl.inputView = datePicker
+        return datePicker
     
     }()
     
-    let datelbl : UILabel = {
+    lazy var datelbl : UIDatePicker = {
         
-        let lbl = UILabel()
-        lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.backgroundColor = .white
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.timeStyle = .medium
-        let result = formatter.string(from: date)
-        lbl.text = result
-        return lbl
+//        let lbl = UILabel()
+//        lbl.translatesAutoresizingMaskIntoConstraints = false
+//        lbl.backgroundColor = .white
+//        let date = Date()
+//        let formatter = DateFormatter()
+//        formatter.timeStyle = .medium
+//        let result = formatter.string(from: date)
+//        lbl.text = result
+//        return lbl
+        
+        let timePicker = UIDatePicker()
+        timePicker.datePickerMode = .time
+        timePicker.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
+        timePicker.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        timePicker.setDate(Date(), animated: false)
+        timePicker.addTarget(self, action: #selector(self.datePickerChanged(sender:)), for:.valueChanged)
+        timePicker.translatesAutoresizingMaskIntoConstraints = false
+//        lbl.inputView = datePicker
+        return timePicker
     
     }()
     
@@ -48,6 +64,14 @@ class SubView: UIView {
 
         setUpConstraints()
     }
+    
+    @IBAction func datePickerChanged(sender: UIDatePicker) {
+
+       print("print \(sender.date)")
+
+      
+   }
+
     
     func setUpConstraints(){
         NSLayoutConstraint.activate([
@@ -62,9 +86,11 @@ class SubView: UIView {
         ])
     }
     
-    @objc func setDate(_ sender: UITapGestureRecognizer) {
-            print("labelTapped")
-        }
+
+    
+  
+    
+   
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
