@@ -85,7 +85,7 @@ class DiaryIEntryController: RootViewController{
     
     func setUp(){
         
-        let addPhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(addImage))
+        let addPhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(addImage(sender:)))
         let menu = buttonData.init(title: "Menu", image: "menu.png", action: #selector(addImage))
         let back = buttonData.init(title: "Back", image: "back.png", action: #selector(dissmiss))
         self.setLeftButton(array: [back])
@@ -140,13 +140,38 @@ class DiaryIEntryController: RootViewController{
     }
 
 
-    @objc func addImage(){
+    @objc func addImage(sender:UIBarButtonItem){
         
-        let picker = UIImagePickerController.init()
-        picker.sourceType = .photoLibrary
-        picker.allowsEditing = true
-        picker.delegate = self
-        self.present(picker, animated: true, completion: nil)
+        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let Camera = UIAlertAction(title: "Camera", style: .default) { (UIAlertAction) in
+            let picker = UIImagePickerController.init()
+            picker.sourceType = .camera
+            picker.allowsEditing = true
+            picker.delegate = self
+            picker.modalPresentationStyle = .fullScreen
+            self.present(picker, animated: true, completion: nil)
+        }
+        
+        let Gallery = UIAlertAction(title: "Gallery", style: .default) { (UIAlertAction) in
+            let picker = UIImagePickerController.init()
+            picker.sourceType = .photoLibrary
+            picker.allowsEditing = true
+            picker.delegate = self
+            picker.modalPresentationStyle = .fullScreen
+            self.present(picker, animated: true, completion: nil)
+        }
+        controller.addAction(Camera)
+        controller.addAction(Gallery)
+        
+        let popover = controller.popoverPresentationController
+        popover?.sourceView = view
+        popover?.sourceRect = CGRect(x: 32, y: 32, width: 0, height: 0)
+        popover?.barButtonItem = sender
+        
+        self.present(controller, animated: true, completion: nil)
+        
+        
+
    
     }
     
@@ -186,27 +211,6 @@ class DiaryIEntryController: RootViewController{
         saveButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
         saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
 
-
-//        saveButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-//        saveButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-
-        
-        
-        
-        
-        
-        
-        //            subView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-        //            subView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-        //            subView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-        //            subView.heightAnchor.constraint(equalToConstant: 620),
-        
-        //        subView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        //        subView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-        
-        
-        
-        
     }
 
 }
@@ -219,7 +223,7 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if array.count > 0 {
             
-            cvHeightConstraint.constant = 300
+            cvHeightConstraint.constant = self.view.frame.height / 5
             
         }
         return array.count
@@ -238,6 +242,14 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
                            sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
        }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let vc = ImageViewController()
+        let nav = UINavigationController.init(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: false, completion: nil)
+    }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 

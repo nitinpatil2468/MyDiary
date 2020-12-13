@@ -57,15 +57,9 @@ class RootViewController: UIViewController {
         var buttonsArray = [UIBarButtonItem]()
         for data in array{
             
-            let button = UIButton(type: .system)
-            button.tintColor = #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1)
-            button.setImage(UIImage(named: data.image!), for: .normal)
-            button.imageView?.contentMode = .center
-            button.sizeToFit()
-            button.addTarget(self, action: data.action!, for: .touchUpInside)
-            let rightButton = UIBarButtonItem(customView: button)
+            let rightButton = UIBarButtonItem(image:UIImage(named: data.image!), style: .plain, target: self, action: data.action!)
             buttonsArray.append(rightButton)
-            
+
         }
         self.navigationItem.rightBarButtonItems = buttonsArray
 
