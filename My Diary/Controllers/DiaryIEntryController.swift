@@ -14,6 +14,12 @@ class DiaryIEntryController: RootViewController{
         var imageDirectory:URL!
         var textHeightConstraint: NSLayoutConstraint!
         var cvHeightConstraint: NSLayoutConstraint!
+    
+        var isLoaded = Bool()
+        var savedDetail = String()
+        var savedTitle = String()
+        var time = Double()
+        var date = Double()
 
         lazy var collectionView:UICollectionView = {
         let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
@@ -85,30 +91,46 @@ class DiaryIEntryController: RootViewController{
     
     func setUp(){
         
-        let addPhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(addImage(sender:)))
-        let menu = buttonData.init(title: "Menu", image: "menu.png", action: #selector(addImage))
-        let back = buttonData.init(title: "Back", image: "back.png", action: #selector(dissmiss))
-        self.setLeftButton(array: [back])
-        self.setRightButton(array: [menu,addPhoto])
         self.view.addSubview(subView)
         self.view.addSubview(titleView)
         self.view.addSubview(collectionView)
         self.view.addSubview(txtView)
         self.view.addSubview(saveButton)
-        
         self.hideKeyboardWhenTappedAround()
+        self.setNavigationButtons()
+
+        
+        if isLoaded{
+            
+            titleView.titlefield.text = self.savedTitle
+            txtView.text = self.savedDetail
+            subView.datelbl.date =  Date(timeIntervalSince1970: date/1000)
+            subView.timelbl.date =  Date(timeIntervalSince1970: time/1000)
+            self.setNavigationButtons()
+
+        }
 
         self.setUpConstraints()
 
     }
     
+    func setNavigationButtons(){
+        
+        let addPhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(addImage(sender:)))
+        let menu = buttonData.init(title: "Menu", image: "menu.png", action: #selector(addImage))
+        let back = buttonData.init(title: "Back", image: "back.png", action: #selector(dissmiss))
+        self.setLeftButton(array: [back])
+        
+        if array.count > 0{
+            let deletePhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(removeImage(sender:)))
+            self.setRightButton(array: [menu,addPhoto,deletePhoto])
+            collectionView.reloadData()
+        }else{
+            self.setRightButton(array: [menu,addPhoto])
+        }
+    }
+    
     @objc func saveEntry(){
-        
-        print(titleView.titlefield.text as Any)
-        print(subView.datelbl.date)
-        print(subView.timelbl.date)
-        print(txtView.text as Any)
-        
         
         if let title = titleView.titlefield.text,
             let details = txtView.text
@@ -118,6 +140,9 @@ class DiaryIEntryController: RootViewController{
             let dateStamp = (subView.datelbl.date.timeIntervalSince1970 * 1000).rounded()
             let timeStamp = (subView.timelbl.date.timeIntervalSince1970 * 1000).rounded()
             
+            print(" Saving date \(dateStamp)")
+            print(" Saving time \(timeStamp)")
+
             diaryEntry["title"] = title
             diaryEntry["dateStamp"] = String(dateStamp)
             diaryEntry["timeStamp"] = String(timeStamp)
@@ -125,19 +150,24 @@ class DiaryIEntryController: RootViewController{
             diaryEntry["detail"] = details
             
             EntryDBHelper.sharedInstance.addNewEntry(object: diaryEntry)
-            let ok =  EntryDBHelper.sharedInstance.getEntries()
 
-
-
-            
-            
         }
-        
-
-
-
-        
     }
+    
+    @objc func removeImage(sender:UIBarButtonItem){
+        
+        for cell in collectionView.visibleCells{
+            let index = collectionView.indexPath(for: cell)
+            array.remove(at: index!.section)
+            if array.count == 0{
+                self.setNavigationButtons()
+                cvHeightConstraint.constant = 0
+            }else{
+                collectionView.reloadData()
+            }
+        }
+    }
+
 
 
     @objc func addImage(sender:UIBarButtonItem){
@@ -169,10 +199,7 @@ class DiaryIEntryController: RootViewController{
         popover?.barButtonItem = sender
         
         self.present(controller, animated: true, completion: nil)
-        
-        
 
-   
     }
     
     @objc func dissmiss(){
@@ -217,9 +244,6 @@ class DiaryIEntryController: RootViewController{
 
 extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UICollectionViewDelegateFlowLayout,UITextViewDelegate{
     
-    
-    
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if array.count > 0 {
             
@@ -233,7 +257,6 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! imageCell
         cell.data = array[indexPath.row]
-//        cell.cardView.transform = .identity
         return cell
      }
     
@@ -246,6 +269,7 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let vc = ImageViewController()
+        vc.urlArray = array
         let nav = UINavigationController.init(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: false, completion: nil)
@@ -257,13 +281,14 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
             
             self.createDirecotry(image: img as! UIImage)
             array.append(self.imageDirectory)
-            urlStrings.append(self.imageDirectory.absoluteString)
+            urlStrings.append(self.imageDirectory.path)
             print(array)
  
          }
         self.dismiss(animated: true, completion: { [self] in
             
-            self.collectionView.reloadData()
+            self.setNavigationButtons()
+//            self.collectionView.reloadData()
 
         })
 

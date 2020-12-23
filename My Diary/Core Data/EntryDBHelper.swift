@@ -36,7 +36,7 @@ class EntryDBHelper{
         
     }
     
-    func getEntries() -> [Diary_Entry]{
+    func getEntries() -> [Diary_Entry]?{
         
         var entries = [Diary_Entry]()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Diary_Entry")

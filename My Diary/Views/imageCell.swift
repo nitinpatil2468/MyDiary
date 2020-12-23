@@ -72,13 +72,8 @@ class imageCell : UICollectionViewCell {
     
     func manageData(){
         guard let data = data else {return}
-//        overlayView.backgroundColor = data.overlayBackground
         cardImage.image =
         self.getImage(url: data)
-//        brandName.text = data.brandName
-//        setUpAttributeText(data.rating, data.category, data.priceTrend)
-//        label.text = data
-        
     }
     
     func getImage(url:URL)->UIImage{

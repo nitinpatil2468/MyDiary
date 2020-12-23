@@ -14,7 +14,7 @@ class ImageViewController: RootViewController {
     layout.scrollDirection = .horizontal
     let cv = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     cv.translatesAutoresizingMaskIntoConstraints = false
-    cv.showsHorizontalScrollIndicator = false
+    cv.showsHorizontalScrollIndicator = true
     cv.setCollectionViewLayout(layout, animated: false)
     cv.delegate = self
     cv.dataSource = self
@@ -23,6 +23,7 @@ class ImageViewController: RootViewController {
     return cv
 }()
     
+    var urlArray : [URL]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +33,6 @@ class ImageViewController: RootViewController {
         self.view.addSubview(collectionView)
         self.setUpConstraints()
 
-
-        
     }
     
     func setUpConstraints(){
@@ -42,7 +41,6 @@ class ImageViewController: RootViewController {
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
-        
         
     }
     
@@ -60,13 +58,16 @@ class ImageViewController: RootViewController {
 extension ImageViewController : UICollectionViewDelegate,UICollectionViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UICollectionViewDelegateFlowLayout,UITextViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return urlArray?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! imageCell
-        cell.cardImage.image =  (UIImage.init(named: "plus.png"))
+        if let url = urlArray?[indexPath.row]{
+            let data = try?Data(contentsOf: url)
+            cell.cardImage.image = UIImage.init(data: data!)
+        }
       
         return cell
      }
