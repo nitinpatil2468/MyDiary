@@ -10,16 +10,24 @@ import UIKit
 class DiaryIEntryController: RootViewController{
 
         var array = [URL]()
-        var urlStrings = [String]()
+        var urlStrings : [String]?
         var imageDirectory:URL!
         var textHeightConstraint: NSLayoutConstraint!
         var cvHeightConstraint: NSLayoutConstraint!
     
         var isLoaded = Bool()
-        var savedDetail = String()
         var savedTitle = String()
         var time = Double()
         var date = Double()
+    
+       var savedDetail:String?{
+        didSet{
+            txtView.text = savedDetail
+            txtView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+            print(txtView.frame.size.height)
+        }
+    }
+    
 
         lazy var collectionView:UICollectionView = {
         let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
@@ -63,11 +71,24 @@ class DiaryIEntryController: RootViewController{
     
     lazy var titleView :TitleView = {
         
-        let tv = TitleView.init(frame: .zero)
+        let tv = TitleView.init(frame: .zero, button: addButton)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         return tv
         
+    }()
+    
+    let addButton:UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage.init(systemName: "plus"), for: .normal)
+        btn.imageView?.contentMode = .center
+        btn.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        btn.tintColor = #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1)
+        btn.clipsToBounds = true
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addTarget(self, action: #selector(showEmojiPicker), for: .touchUpInside)
+        btn.layer.cornerRadius = 50/2
+        return btn
     }()
     
     lazy var saveButton : UIButton = {
@@ -80,6 +101,14 @@ class DiaryIEntryController: RootViewController{
         btn.layer.cornerRadius = 30
         return btn
     }()
+    
+    var moodType:String?{
+        didSet{
+            let img = moodType?.image()
+            addButton.setImage(img, for: .normal)
+            addButton.imageView?.contentMode = .scaleAspectFit
+        }
+    }
 
     override func viewDidLoad() {
         self.view.backgroundColor = #colorLiteral(red: 0.9922418153, green: 0.9401817535, blue: 0.7990587617, alpha: 1)
@@ -98,12 +127,13 @@ class DiaryIEntryController: RootViewController{
         self.view.addSubview(saveButton)
         self.hideKeyboardWhenTappedAround()
         self.setNavigationButtons()
+        
 
         
         if isLoaded{
             
             titleView.titlefield.text = self.savedTitle
-            txtView.text = self.savedDetail
+//            txtView.text = self.savedDetail
             subView.datelbl.date =  Date(timeIntervalSince1970: date/1000)
             subView.timelbl.date =  Date(timeIntervalSince1970: time/1000)
             self.setNavigationButtons()
@@ -113,6 +143,17 @@ class DiaryIEntryController: RootViewController{
         self.setUpConstraints()
 
     }
+    
+    @objc func showEmojiPicker(){
+        
+        let vc = EmojiPicker()
+        let nav = UINavigationController(rootViewController: EmojiPicker())
+        vc.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true, completion: nil)
+    }
+    
+    
+    
     
     func setNavigationButtons(){
         
@@ -146,9 +187,9 @@ class DiaryIEntryController: RootViewController{
             diaryEntry["title"] = title
             diaryEntry["dateStamp"] = String(dateStamp)
             diaryEntry["timeStamp"] = String(timeStamp)
-            diaryEntry["photoUrl"] = urlStrings.joined(separator: ", ")
+            diaryEntry["photoUrl"] = urlStrings?.joined(separator: ", ")
             diaryEntry["detail"] = details
-            
+            diaryEntry["emojiString"] = moodType
             EntryDBHelper.sharedInstance.addNewEntry(object: diaryEntry)
 
         }
@@ -211,7 +252,7 @@ class DiaryIEntryController: RootViewController{
     
     func setUpConstraints(){
         
-        collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
+        collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         self.cvHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
@@ -230,7 +271,7 @@ class DiaryIEntryController: RootViewController{
         txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         txtView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 0).isActive = true
-        self.textHeightConstraint = txtView.heightAnchor.constraint(equalToConstant: 200)
+        self.textHeightConstraint = txtView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
         self.textHeightConstraint.isActive = true
         
         saveButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
@@ -281,7 +322,7 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
             
             self.createDirecotry(image: img as! UIImage)
             array.append(self.imageDirectory)
-            urlStrings.append(self.imageDirectory.path)
+            self.urlStrings?.append(self.imageDirectory.path)
             print(array)
  
          }
@@ -334,6 +375,8 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
         let cvHeight = collectionView.frame.height
         let tvHeight = textHeightConstraint.constant
         let viewHeight = self.view.frame.height
+        print("first : \(tvHeight)")
+
         print(cvHeight + tvHeight + 70)
         
         
@@ -346,7 +389,7 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
 
             let fixedWidth = txtView.frame.size.width
             let newSize = txtView.sizeThatFits(CGSize(width: fixedWidth, height: 100 + tvHeight))
-            print(newSize)
+            print("newHeight : \(newSize)")
 
             self.textHeightConstraint.constant = newSize.height
             self.view.layoutIfNeeded()

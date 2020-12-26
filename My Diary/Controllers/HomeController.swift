@@ -29,6 +29,33 @@ class HomeController: RootViewController {
     
     var cvHeightConstraint: NSLayoutConstraint!
     var Entries = [EntryItem]()
+    
+
+    
+    var emojiList: [[String]] = []
+    let sectionTitle: [String] = ["Emoticons"]
+    
+     func layoutSubviews() {
+        fetchEmojis()
+    }
+    
+    func fetchEmojis(){
+
+        let emojiRanges = [
+            0x1F601...0x1F64F
+        ]
+
+        for range in emojiRanges {
+            var array: [String] = []
+            for i in range {
+                if let unicodeScalar = UnicodeScalar(i){
+                    array.append(String(describing: unicodeScalar))
+                }
+            }
+
+            emojiList.append(array)
+        }
+    }
 
 
     override func viewDidLoad() {
@@ -40,7 +67,6 @@ class HomeController: RootViewController {
         self.getData()
         self.view.bringSubviewToFront(self.addButton)
         self.setUpConstraints()
-
     }
     
     @IBAction func addEntry(_ sender: UIButton) {
@@ -96,9 +122,7 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let instance = Entries[indexPath.section]
-        let images = instance.getImages()
-        
-        if !images.contains("") {
+        if instance.getImages() != nil{
             let cell = tableView.dequeueReusableCell(withIdentifier: "TxtImageCell", for: indexPath) as! TxtImageCell
             cell.DetailView.alpha = 0.5
             cell.data = instance
@@ -114,10 +138,8 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         let instance = Entries[indexPath.section]
-        let images = instance.getImages()
-        
-        if !images.contains("") {
-            
+        if instance.getImages() != nil{
+
             return self.view.frame.height / 5
 
         }else{
@@ -134,8 +156,7 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
         nav.modalPresentationStyle = .fullScreen
         
         let instance = Entries[indexPath.section]
-        let images = instance.getImages()
-        if !images.contains("") {
+        if let images = instance.getImages(){
             var urlArray = [URL]()
             for img in images{
                 
@@ -146,21 +167,35 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
             vc.array = urlArray
         }
         
-//        vc.savedDetail = instance.getDetails()
-//        vc.savedTitle = instance.getTITLE()
+        if let moodType = instance.getMood(){
+            vc.moodType = moodType
+        }
         
-        vc.savedTitle = "instance.getDetails()"
-        vc.savedDetail = "If the repository is on GitHub and you have any Pull Requests that have been opened, you’ll get these references that are prefixed with refs/pull/. These are basically branches, but since they’re not under refs/heads/ you don’t get them normally when you clone or fetch from the server — the process of fetching ignores them normally.There are two references per Pull Request - the one that ends in /head points to exactly the same commit as the last commit in the Pull Request branch. So if someone opens a Pull Request in our repository and their branch is named bug-fix and it points to commit a5a775, then in our repository we will not have a bug-fix branch (since that’s in their fork), but we will have pull/<pr#>/head that points to a5a775. This means that we can pretty easily pull down every Pull Request branch in one go without having to add a bunch of remotes."
-        vc.date = Double(252525222)
-        vc.time = Double(222225222)
-        
-        
-//        vc.date = Double(instance.getDate())!
-//        vc.time = Double(instance.getTime())!
+        vc.savedDetail = instance.getDetails()
+        vc.savedTitle = instance.getTITLE()!
+        vc.date = Double(instance.getDate()!)!
+        vc.time = Double(instance.getTime()!)!
         vc.isLoaded = true
         self.present(nav, animated: false, completion: nil)
 
     }
+}
+
+extension HomeController:UICollectionViewDelegate,UICollectionViewDataSource,UINavigationControllerDelegate,UICollectionViewDelegateFlowLayout {
+    
+     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "emojicell", for: indexPath) as! EmojiCell
+        cell.cardImage.image = emojiList[indexPath.section][indexPath.item].image()
+        return cell
+    }
+     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return emojiList[section].count
+    }
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return emojiList.count
+    }
+
 }
 
 

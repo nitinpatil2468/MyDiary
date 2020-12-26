@@ -21,6 +21,8 @@ extension Diary_Entry {
     @NSManaged public var photoUrl: String?
     @NSManaged public var detail: String?
     @NSManaged public var dateStamp: String?
+    @NSManaged public var emojiString: String?
+
 
 }
 

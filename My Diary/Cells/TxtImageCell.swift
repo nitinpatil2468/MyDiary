@@ -42,7 +42,7 @@ class TxtImageCell: UITableViewCell {
         guard let data = data else {return}
         titleLbl.text = data.getTITLE()
         discLbl.text = data.getDetails()
-        setImage(data.getImages().first!)
+        setImage((data.getImages()?.first)!)
 
         self.setDay()
         self.setMonth()

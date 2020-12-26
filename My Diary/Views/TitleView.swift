@@ -18,26 +18,16 @@ class TitleView: UIView {
         tf.font = UIFont(name: "GoogleSans-Bold", size: 20)
         return tf
     }()
+    
+    var addButton : UIButton?
 
-    let imageView : UIImageView = {
-        
-        let img = UIImageView()
-        img.image = UIImage.init(systemName: "plus")
-        img.contentMode = .center
-        img.backgroundColor = #colorLiteral(red: 0.9922418153, green: 0.9401817535, blue: 0.7990587617, alpha: 1)
-        img.tintColor = #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1)
-        img.translatesAutoresizingMaskIntoConstraints = false
-        return img
-    }()
     
-    
-    
-    
-    override init(frame: CGRect) {
+     init(frame: CGRect,button:UIButton) {
         
         super.init(frame: frame)
         addSubview(titlefield)
-        addSubview(imageView)
+        addButton = button
+        addSubview(addButton!)
 
         setConstraints()
     }
@@ -52,15 +42,11 @@ class TitleView: UIView {
             titlefield.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             titlefield.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             titlefield.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            imageView.heightAnchor.constraint(equalToConstant: 50),
-            imageView.widthAnchor.constraint(equalToConstant: 50),
-            titlefield.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -20),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
-
-
-            
-        
+            addButton!.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            addButton!.heightAnchor.constraint(equalToConstant: 50),
+            addButton!.widthAnchor.constraint(equalToConstant: 50),
+            titlefield.trailingAnchor.constraint(equalTo: addButton!.leadingAnchor, constant: -20),
+            addButton!.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
     

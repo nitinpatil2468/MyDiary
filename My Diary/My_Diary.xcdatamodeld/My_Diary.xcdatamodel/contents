@@ -3,11 +3,12 @@
     <entity name="Diary_Entry" representedClassName="Diary_Entry" syncable="YES">
         <attribute name="dateStamp" optional="YES" attributeType="String"/>
         <attribute name="detail" optional="YES" attributeType="String"/>
+        <attribute name="emojiString" optional="YES" attributeType="String"/>
         <attribute name="photoUrl" optional="YES" attributeType="String"/>
         <attribute name="timeStamp" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Diary_Entry" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Diary_Entry" positionX="-63" positionY="-18" width="128" height="133"/>
     </elements>
 </model>

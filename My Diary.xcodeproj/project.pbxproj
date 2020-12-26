@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9415D56A2591C0E100E17058 /* EntryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9415D5682591C0E100E17058 /* EntryItem.swift */; };
-		9415D56B2591C0E100E17058 /* SubOptionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9415D5692591C0E100E17058 /* SubOptionMenu.swift */; };
 		94389E42257D149A00F43679 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94389E3E257D149A00F43679 /* TitleView.swift */; };
 		94389E43257D149A00F43679 /* TextEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94389E3F257D149A00F43679 /* TextEntryView.swift */; };
 		94389E44257D149A00F43679 /* SubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94389E40257D149A00F43679 /* SubView.swift */; };
@@ -28,6 +27,9 @@
 		94389E6A257D14EA00F43679 /* EntryDBHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94389E67257D14E900F43679 /* EntryDBHelper.swift */; };
 		94389E6B257D14EA00F43679 /* Diary_Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94389E68257D14E900F43679 /* Diary_Entry+CoreDataProperties.swift */; };
 		94389E6C257D14EA00F43679 /* Diary_Entry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94389E69257D14E900F43679 /* Diary_Entry+CoreDataClass.swift */; };
+		944FB0E925970AF0009EFF77 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944FB0E825970AEF009EFF77 /* String+Extension.swift */; };
+		944FB0ED25970CBA009EFF77 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944FB0EC25970CBA009EFF77 /* EmojiCell.swift */; };
+		944FB0F025972F6C009EFF77 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944FB0EF25972F6C009EFF77 /* EmojiPicker.swift */; };
 		94A6B3362585F107001E0D8E /* TxtImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A6B3342585F107001E0D8E /* TxtImageCell.swift */; };
 		94A6B3372585F107001E0D8E /* TxtImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A6B3352585F107001E0D8E /* TxtImageCell.xib */; };
 		94A6B33F258607CC001E0D8E /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A6B33E258607CC001E0D8E /* ImageViewController.swift */; };
@@ -44,7 +46,6 @@
 
 /* Begin PBXFileReference section */
 		9415D5682591C0E100E17058 /* EntryItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryItem.swift; sourceTree = "<group>"; };
-		9415D5692591C0E100E17058 /* SubOptionMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubOptionMenu.swift; sourceTree = "<group>"; };
 		94389E3E257D149A00F43679 /* TitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		94389E3F257D149A00F43679 /* TextEntryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextEntryView.swift; sourceTree = "<group>"; };
 		94389E40257D149A00F43679 /* SubView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubView.swift; sourceTree = "<group>"; };
@@ -64,6 +65,9 @@
 		94389E67257D14E900F43679 /* EntryDBHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryDBHelper.swift; sourceTree = "<group>"; };
 		94389E68257D14E900F43679 /* Diary_Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Diary_Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		94389E69257D14E900F43679 /* Diary_Entry+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Diary_Entry+CoreDataClass.swift"; sourceTree = "<group>"; };
+		944FB0E825970AEF009EFF77 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		944FB0EC25970CBA009EFF77 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
+		944FB0EF25972F6C009EFF77 /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
 		94A6B3342585F107001E0D8E /* TxtImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxtImageCell.swift; sourceTree = "<group>"; };
 		94A6B3352585F107001E0D8E /* TxtImageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TxtImageCell.xib; sourceTree = "<group>"; };
 		94A6B33E258607CC001E0D8E /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
@@ -95,7 +99,6 @@
 			isa = PBXGroup;
 			children = (
 				9415D5682591C0E100E17058 /* EntryItem.swift */,
-				9415D5692591C0E100E17058 /* SubOptionMenu.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -107,6 +110,7 @@
 				94389E3F257D149A00F43679 /* TextEntryView.swift */,
 				94389E40257D149A00F43679 /* SubView.swift */,
 				94389E41257D149A00F43679 /* imageCell.swift */,
+				944FB0EC25970CBA009EFF77 /* EmojiCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -115,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				94389E48257D14AC00F43679 /* ViewController+Extension.swift */,
+				944FB0E825970AEF009EFF77 /* String+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -149,6 +154,7 @@
 				94389E5F257D14D800F43679 /* MainViewController.swift */,
 				94389E60257D14D800F43679 /* DiaryIEntryController.swift */,
 				94A6B33E258607CC001E0D8E /* ImageViewController.swift */,
+				944FB0EF25972F6C009EFF77 /* EmojiPicker.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -298,11 +304,11 @@
 				94A72490251604A600F33F3C /* RootViewController.swift in Sources */,
 				94389E62257D14D800F43679 /* HomeController.swift in Sources */,
 				94389E63257D14D800F43679 /* MainViewController.swift in Sources */,
-				9415D56B2591C0E100E17058 /* SubOptionMenu.swift in Sources */,
 				94A7248C251604A600F33F3C /* AppDelegate.swift in Sources */,
 				94A7248E251604A600F33F3C /* SceneDelegate.swift in Sources */,
 				94A72496251604A600F33F3C /* My_Diary.xcdatamodeld in Sources */,
 				94389E6C257D14EA00F43679 /* Diary_Entry+CoreDataClass.swift in Sources */,
+				944FB0E925970AF0009EFF77 /* String+Extension.swift in Sources */,
 				9415D56A2591C0E100E17058 /* EntryItem.swift in Sources */,
 				94389E49257D14AC00F43679 /* ViewController+Extension.swift in Sources */,
 				94389E45257D149A00F43679 /* imageCell.swift in Sources */,
@@ -311,6 +317,8 @@
 				94389E64257D14D800F43679 /* DiaryIEntryController.swift in Sources */,
 				94A6B33F258607CC001E0D8E /* ImageViewController.swift in Sources */,
 				94389E43257D149A00F43679 /* TextEntryView.swift in Sources */,
+				944FB0ED25970CBA009EFF77 /* EmojiCell.swift in Sources */,
+				944FB0F025972F6C009EFF77 /* EmojiPicker.swift in Sources */,
 				94389E44257D149A00F43679 /* SubView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

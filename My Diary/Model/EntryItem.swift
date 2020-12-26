@@ -18,6 +18,7 @@ class EntryItem: NSObject {
      var Detail : String?
      var Images : [String]?
      var TimeStamp : String?
+     var moodType : String?
      var Entries : [EntryItem]?
     
     override init(){
@@ -37,9 +38,14 @@ class EntryItem: NSObject {
                 entryItem.setTime(diaryEntry.timeStamp!)
                 entryItem.setDate(diaryEntry.dateStamp!)
                 entryItem.setDetails(diaryEntry.detail!)
-                entryItem.setImages(diaryEntry.photoUrl!)
+                
+                if diaryEntry.photoUrl != nil{
+                    entryItem.setImages(diaryEntry.photoUrl!)
+                }
+                if diaryEntry.emojiString != nil{
+                    entryItem.setMood(diaryEntry.emojiString!)
+                }
                 entryItems.append(entryItem)
-
             }
             setEntries(entryItems)
         }
@@ -86,29 +92,38 @@ class EntryItem: NSObject {
         self.Images = imageArray
 
     }
-//
-    public func getTITLE()->String{
+    public func getTITLE()->String?{
 
         return TITLE!;
     }
-//
-    public func getImages()->[String]{
+    
+    public func getImages()->[String]?{
 
-        return Images!;
+        return Images
     }
     
-    public func getDetails()->String{
+    public func getDetails()->String?{
 
         return Detail!;
     }
-    public func getTime()->String{
+    public func getTime()->String?{
 
         return TimeStamp!;
     }
-    public func getDate()->String{
+    public func getDate()->String?{
 
         return DateStamp!;
     }
+    func setMood(_ moodType:String){
+
+       self.moodType = moodType;
+
+   }
+    func getMood()->String?{
+
+        return moodType
+
+   }
 }
 
 
