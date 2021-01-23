@@ -16,14 +16,7 @@ class imageCell : UICollectionViewCell {
         }
     }
     
-//        var data:String?{
-//            didSet{
-//                manageData()
-//            }
-//        }
-    
 
-    
     let cardImage:UIImageView = {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
@@ -32,17 +25,7 @@ class imageCell : UICollectionViewCell {
 //        img.layer.cornerRadius = 20
         return img
     }()
-    
-    
-//    let label:UILabel = {
-//        let label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.clipsToBounds = true
-////        img.contentMode = .scaleAspectFit
-//        label.layer.cornerRadius = 20
-//        return label
-//    }()
-    
+
     override init(frame: CGRect) {
         super.init(frame:frame)
         addSubview(cardImage)
@@ -57,11 +40,7 @@ class imageCell : UICollectionViewCell {
     func setUpConstraints(){
         
         NSLayoutConstraint.activate([
-            
-//            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-//            label.centerXAnchor.constraint(equalTo: centerXAnchor)
 
-            
             cardImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             cardImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
             cardImage.topAnchor.constraint(equalTo: topAnchor, constant: 0),
@@ -79,8 +58,8 @@ class imageCell : UICollectionViewCell {
     func getImage(url:URL)->UIImage{
         
         var img = UIImage()
-        let fileURL = url
-        if let imageData = NSData(contentsOf: fileURL) {
+        print(url)
+        if let imageData = NSData(contentsOf: url) {
             img = UIImage(data: imageData as Data)! // Here you can attach image to UIImageView
         }
        return img

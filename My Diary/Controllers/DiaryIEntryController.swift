@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 class DiaryIEntryController: RootViewController{
 
         var array = [URL]()
@@ -20,10 +21,11 @@ class DiaryIEntryController: RootViewController{
         var time = Double()
         var date = Double()
     
+        var homeDelegate : HomeControllerDelegate?
+    
        var savedDetail:String?{
         didSet{
             txtView.text = savedDetail
-            txtView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
             print(txtView.frame.size.height)
         }
     }
@@ -114,7 +116,6 @@ class DiaryIEntryController: RootViewController{
         self.view.backgroundColor = #colorLiteral(red: 0.9922418153, green: 0.9401817535, blue: 0.7990587617, alpha: 1)
         super.viewDidLoad()
         self.setUp()
-
         // Do any additional setup after loading the view.
     }
     
@@ -127,20 +128,26 @@ class DiaryIEntryController: RootViewController{
         self.view.addSubview(saveButton)
         self.hideKeyboardWhenTappedAround()
         self.setNavigationButtons()
-        
+        self.setUpConstraints()
 
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         if isLoaded{
-            
+            UserDefaults.standard.set(time, forKey: "uniqueTime")
+            UserDefaults.standard.set(date, forKey: "uniqueDate")
             titleView.titlefield.text = self.savedTitle
-//            txtView.text = self.savedDetail
+            txtView.text = self.savedDetail
             subView.datelbl.date =  Date(timeIntervalSince1970: date/1000)
             subView.timelbl.date =  Date(timeIntervalSince1970: time/1000)
             self.setNavigationButtons()
+            adjustTextViewHeight()
+
+        }else{
+            UserDefaults.standard.set(nil, forKey: "uniqueTime")
+            UserDefaults.standard.set(nil, forKey: "uniqueDate")
 
         }
-
-        self.setUpConstraints()
 
     }
     
@@ -158,16 +165,16 @@ class DiaryIEntryController: RootViewController{
     func setNavigationButtons(){
         
         let addPhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(addImage(sender:)))
-        let menu = buttonData.init(title: "Menu", image: "menu.png", action: #selector(addImage))
+//        let menu = buttonData.init(title: "Menu", image: "menu.png", action: #selector(addImage))
         let back = buttonData.init(title: "Back", image: "back.png", action: #selector(dissmiss))
         self.setLeftButton(array: [back])
         
         if array.count > 0{
-            let deletePhoto = buttonData.init(title: "Camera", image: "add.png", action: #selector(removeImage(sender:)))
-            self.setRightButton(array: [menu,addPhoto,deletePhoto])
+            let deletePhoto = buttonData.init(title: "Camera", image: "Remove.png", action: #selector(removeImage(sender:)))
+            self.setRightButton(array: [addPhoto,deletePhoto])
             collectionView.reloadData()
         }else{
-            self.setRightButton(array: [menu,addPhoto])
+            self.setRightButton(array: [addPhoto])
         }
     }
     
@@ -183,28 +190,41 @@ class DiaryIEntryController: RootViewController{
             
             print(" Saving date \(dateStamp)")
             print(" Saving time \(timeStamp)")
+            
+            for url in array{
+                self.urlStrings = []
+                self.urlStrings!.append(url.lastPathComponent)
+            }
 
             diaryEntry["title"] = title
             diaryEntry["dateStamp"] = String(dateStamp)
             diaryEntry["timeStamp"] = String(timeStamp)
-            diaryEntry["photoUrl"] = urlStrings?.joined(separator: ", ")
+            diaryEntry["photoUrl"] = urlStrings?.joined(separator: ",")
             diaryEntry["detail"] = details
             diaryEntry["emojiString"] = moodType
             EntryDBHelper.sharedInstance.addNewEntry(object: diaryEntry)
 
+            self.dismiss(animated: true) {
+                self.homeDelegate?.reloadTable()
+            }
         }
     }
     
     @objc func removeImage(sender:UIBarButtonItem){
         
         for cell in collectionView.visibleCells{
-            let index = collectionView.indexPath(for: cell)
-            array.remove(at: index!.section)
-            if array.count == 0{
-                self.setNavigationButtons()
-                cvHeightConstraint.constant = 0
-            }else{
-                collectionView.reloadData()
+            if let indexPath = collectionView.indexPath(for: cell){
+                
+                self.collectionView.performBatchUpdates({
+                    array.remove(at: indexPath.row)
+                    collectionView.deleteItems(at: [indexPath])
+                    
+                }){_ in
+                    if self.array.count == 0{
+                        self.setNavigationButtons()
+                        self.cvHeightConstraint.constant = 0
+                    }
+                }
             }
         }
     }
@@ -271,6 +291,8 @@ class DiaryIEntryController: RootViewController{
         txtView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         txtView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         txtView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 0).isActive = true
+        txtView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -20).isActive = true
+
         self.textHeightConstraint = txtView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
         self.textHeightConstraint.isActive = true
         
@@ -319,20 +341,13 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
         if let img = info[.originalImage] {
-            
             self.createDirecotry(image: img as! UIImage)
             array.append(self.imageDirectory)
-            self.urlStrings?.append(self.imageDirectory.path)
-            print(array)
- 
          }
         self.dismiss(animated: true, completion: { [self] in
             
             self.setNavigationButtons()
-//            self.collectionView.reloadData()
-
         })
-
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -341,59 +356,33 @@ extension DiaryIEntryController : UICollectionViewDelegate,UICollectionViewDataS
     
     func createDirecotry(image : UIImage){
         
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let folderDirectory = documentsDirectory.appendingPathComponent("visionSense")
-        let success = FileManager.default.fileExists(atPath: folderDirectory.path) as Bool
-        if success == false {
-            do {
-                try! FileManager.default.createDirectory(atPath: folderDirectory.path, withIntermediateDirectories: true, attributes: nil)
-            }
-        }
-        
-        let  imageName = String(format: "%@%x%@", "AIimage_",Int.random(in: 1..<5000),".png")
-        self.imageDirectory = folderDirectory.appendingPathComponent(imageName)
+        let tempDirectoryURL = NSURL.fileURL(withPath: NSTemporaryDirectory(), isDirectory: true)
+        let  imageName = String(format: "%@%x%@", "Snap",(NSDate().timeIntervalSince1970 * 1000),".png")
+        self.imageDirectory = tempDirectoryURL.appendingPathComponent(imageName)
         if let data = image.jpegData(compressionQuality:  0),
-            !FileManager.default.fileExists(atPath: imageDirectory.path) {
+            !FileManager.default.fileExists(atPath: self.imageDirectory.path) {
             do {
                 // writes the image data to disk
-                try data.write(to: imageDirectory)
-                
+                try data.write(to: self.imageDirectory)
             } catch {
                 print("error saving file: ", error)
             }
         }
     }
-    
-    
-    
+
     func textViewDidChange(_ textView: UITextView) {
-           self.adjustTextViewHeight()
+        adjustTextViewHeight()
        }
-
-       func adjustTextViewHeight() {
-        
-        let cvHeight = collectionView.frame.height
-        let tvHeight = textHeightConstraint.constant
-        let viewHeight = self.view.frame.height
-        print("first : \(tvHeight)")
-
-        print(cvHeight + tvHeight + 70)
-        
-        
-        if cvHeight + tvHeight + 70 < viewHeight {
-            
-            print(cvHeight)
-            print(tvHeight)
-            print(viewHeight)
-            print(CGFloat.greatestFiniteMagnitude + tvHeight)
-
-            let fixedWidth = txtView.frame.size.width
-            let newSize = txtView.sizeThatFits(CGSize(width: fixedWidth, height: 100 + tvHeight))
-            print("newHeight : \(newSize)")
-
-            self.textHeightConstraint.constant = newSize.height
+    
+    func adjustTextViewHeight(){
+        let size = CGSize(width: 250, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        let newFrame = NSString(string: txtView.text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
+        print(newFrame.height)
+        if newFrame.height > 200{
+            self.textHeightConstraint.constant = CGFloat(newFrame.height + 5)
             self.view.layoutIfNeeded()
-            
-        }
-       }
+    }
+    }
+
 }

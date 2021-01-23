@@ -19,6 +19,7 @@ class EmojiPicker: RootViewController {
     btn.setTitle("Cancel", for: .normal)
     btn.setTitleColor(#colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1), for: .normal)
     btn.translatesAutoresizingMaskIntoConstraints = false
+    btn.addTarget(self, action: #selector(dissmiss), for: .touchUpInside)
     return btn
 }()
     
@@ -106,13 +107,20 @@ class EmojiPicker: RootViewController {
         }
     }
     
-    @objc func selectMood(){
+    @objc func dissmiss(){
+ 
+        self.dismiss(animated: true,completion: nil)
+}
     
-        if let nav = self.presentingViewController as? UINavigationController{
-            let arr = nav.viewControllers
-            if let vc = arr.last  as? DiaryIEntryController{
-                print(vc)
-                vc.moodType = mood
+    @objc func selectMood(){
+        
+        if mood != ""{
+            if let nav = self.presentingViewController as? UINavigationController{
+                let arr = nav.viewControllers
+                if let vc = arr.last  as? DiaryIEntryController{
+                    print(mood)
+                    vc.moodType = mood
+                }
             }
         }
         self.dismiss(animated: true,completion: nil)

@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol HomeControllerDelegate {
+    func reloadTable()
+}
+
 class HomeController: RootViewController {
     
     @IBOutlet weak var addButton: UIButton!
@@ -16,7 +20,7 @@ class HomeController: RootViewController {
         
     let tv = UITableView(frame: .zero)
     tv.translatesAutoresizingMaskIntoConstraints = false
-    tv.showsHorizontalScrollIndicator = false
+    tv.showsVerticalScrollIndicator = false
     tv.delegate = self
     tv.dataSource = self
     tv.register(UINib(nibName: "TxtImageCell", bundle: nil), forCellReuseIdentifier: "TxtImageCell")
@@ -60,8 +64,9 @@ class HomeController: RootViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let rightButton = buttonData.init(title: "Calender", image: "Calender.png", action: #selector(getData))
+        let rightButton = buttonData.init(title: "Calender", image: "Calender.png", action: #selector(showAlert))
         self.setRightButton(array: [rightButton])
+        self.navigationItem.title = "My Diary"
         self.view.backgroundColor = #colorLiteral(red: 0.9999136329, green: 0.9961318374, blue: 0.894012332, alpha: 1)
         self.view.addSubview(self.tableView)
         self.getData()
@@ -72,6 +77,7 @@ class HomeController: RootViewController {
     @IBAction func addEntry(_ sender: UIButton) {
         
         let vc = DiaryIEntryController()
+        vc.homeDelegate = self
         let nav = UINavigationController.init(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: false, completion: nil)
@@ -88,13 +94,15 @@ class HomeController: RootViewController {
     }
     
     @objc func getData(){
-        
         let instance = EntryItem()
         instance.setModel()
         Entries = instance.getEntries()!
         print(Entries.count)
         tableView.reloadData()
-        
+    }
+    
+    @objc func showAlert(){
+        self.popupAlert(title: "Alert", message: "This functionality not implemented yet", actionTitles: ["Ok"], actions: [nil])
     }
 }
 
@@ -124,7 +132,7 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
         let instance = Entries[indexPath.section]
         if instance.getImages() != nil{
             let cell = tableView.dequeueReusableCell(withIdentifier: "TxtImageCell", for: indexPath) as! TxtImageCell
-            cell.DetailView.alpha = 0.5
+            cell.DetailView.alpha = 0.8
             cell.data = instance
             return cell
         }else{
@@ -140,11 +148,11 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
         let instance = Entries[indexPath.section]
         if instance.getImages() != nil{
 
-            return self.view.frame.height / 5
+            return self.view.frame.height / 3
 
         }else{
             
-            return self.view.frame.height / 10
+            return self.view.frame.height / 6
 
         }
     }
@@ -152,16 +160,13 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = DiaryIEntryController()
-        let nav = UINavigationController.init(rootViewController: vc)
-        nav.modalPresentationStyle = .fullScreen
-        
         let instance = Entries[indexPath.section]
         if let images = instance.getImages(){
             var urlArray = [URL]()
             for img in images{
-                
-                let url = URL(fileURLWithPath: img)
-                urlArray.append(url)
+                let tempDirectoryURL = NSURL.fileURL(withPath: NSTemporaryDirectory(), isDirectory: true)
+                let imageDirectory = tempDirectoryURL.appendingPathComponent(img)
+                urlArray.append(imageDirectory)
             }
             print(urlArray)
             vc.array = urlArray
@@ -176,6 +181,9 @@ extension HomeController: UITableViewDelegate,UITableViewDataSource{
         vc.date = Double(instance.getDate()!)!
         vc.time = Double(instance.getTime()!)!
         vc.isLoaded = true
+        vc.homeDelegate = self
+        let nav = UINavigationController.init(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: false, completion: nil)
 
     }
@@ -196,6 +204,12 @@ extension HomeController:UICollectionViewDelegate,UICollectionViewDataSource,UIN
         return emojiList.count
     }
 
+}
+
+extension HomeController:HomeControllerDelegate {
+    func reloadTable() {
+        self.getData()
+    }
 }
 
 

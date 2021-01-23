@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8LA-Ca-GAA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8LA-Ca-GAA">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kn9-d1-opl">
-                                <rect key="frame" x="304" y="752" width="60" height="60"/>
+                                <rect key="frame" x="324" y="772" width="60" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="dML-Kw-ebN"/>
@@ -39,8 +39,8 @@
                         <viewLayoutGuide key="safeArea" id="En9-dm-EqP"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="En9-dm-EqP" firstAttribute="bottom" secondItem="Kn9-d1-opl" secondAttribute="bottom" constant="50" id="tpf-dw-rAf"/>
-                            <constraint firstItem="En9-dm-EqP" firstAttribute="trailing" secondItem="Kn9-d1-opl" secondAttribute="trailing" constant="50" id="uWM-Wh-FRM"/>
+                            <constraint firstItem="En9-dm-EqP" firstAttribute="bottom" secondItem="Kn9-d1-opl" secondAttribute="bottom" constant="30" id="tpf-dw-rAf"/>
+                            <constraint firstItem="En9-dm-EqP" firstAttribute="trailing" secondItem="Kn9-d1-opl" secondAttribute="trailing" constant="30" id="uWM-Wh-FRM"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Iow-eS-v81"/>

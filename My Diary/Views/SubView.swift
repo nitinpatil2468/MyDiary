@@ -9,17 +9,8 @@ import UIKit
 
 class SubView: UIView {
 
-    lazy var timelbl : UIDatePicker = {
-        
-//        let lbl = UITextField()
-//        lbl.translatesAutoresizingMaskIntoConstraints = false
-//        lbl.backgroundColor = .white
-//        let date = Date()
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "EEEE, MMM d, yyyy"
-//        let result = formatter.string(from: date)
-//        lbl.text = result
-//        lbl.isUserInteractionEnabled = true
+    lazy var datelbl : UIDatePicker = {
+
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -27,23 +18,12 @@ class SubView: UIView {
         datePicker.setDate(Date(), animated: false)
         datePicker.addTarget(self, action: #selector(self.datePickerChanged(sender:)), for:.valueChanged)
         datePicker.translatesAutoresizingMaskIntoConstraints = false
-//        lbl.inputView = datePicker
         return datePicker
     
     }()
     
-    lazy var datelbl : UIDatePicker = {
-        
-//        let lbl = UILabel()
-//        lbl.translatesAutoresizingMaskIntoConstraints = false
-//        lbl.backgroundColor = .white
-//        let date = Date()
-//        let formatter = DateFormatter()
-//        formatter.timeStyle = .medium
-//        let result = formatter.string(from: date)
-//        lbl.text = result
-//        return lbl
-        
+    lazy var timelbl : UIDatePicker = {
+
         let timePicker = UIDatePicker()
         timePicker.datePickerMode = .time
         timePicker.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
@@ -51,7 +31,6 @@ class SubView: UIView {
         timePicker.setDate(Date(), animated: false)
         timePicker.addTarget(self, action: #selector(self.datePickerChanged(sender:)), for:.valueChanged)
         timePicker.translatesAutoresizingMaskIntoConstraints = false
-//        lbl.inputView = datePicker
         return timePicker
     
     }()

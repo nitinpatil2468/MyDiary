@@ -1,9 +1,8 @@
 //
 //  CustomNavigationController.swift
-//  ProteusVision
+//  My Diary
 //
-//  Created by Nitin Patil on 31/08/20.
-//  Copyright © 2020 Proteus Technologies. All rights reserved.
+//  Created by Nitin Patil on 26/12/20.
 //
 
 import UIKit
@@ -23,41 +22,17 @@ class RootViewController: UIViewController {
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.9922418153, green: 0.9401817535, blue: 0.7990587617, alpha: 1)
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1);
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : #colorLiteral(red: 0.5353659864, green: 0.5353659864, blue: 0.5353659864, alpha: 1)]
-        
-//        self.setRightButton()
-        
-        
+ 
     }
     
-    @objc func openMenuDrawer(){
-        
-       
-    }
-    
-    @objc func openProfilePage(){
-         
-      
-         
-     }
-   
-    @objc func setNavigationBar(){
-        
-        let leftButton = UIBarButtonItem(image: UIImage.init(named: "plus.png"), style: .plain, target: self, action: #selector(openMenuDrawer))
-        navigationItem.leftBarButtonItems = [leftButton]
-        
-        let rightButton = UIBarButtonItem(image: UIImage.init(named: "plus.png"), style: .plain, target: self, action: #selector(openMenuDrawer))
-        navigationItem.rightBarButtonItems = [rightButton]
-        
-        
-        
-    }
+
     
     func setRightButton(array : [buttonData]) {
         
         var buttonsArray = [UIBarButtonItem]()
         for data in array{
             
-            let rightButton = UIBarButtonItem(image:UIImage(named: data.image!), style: .plain, target: self, action: data.action!)
+            let rightButton = UIBarButtonItem(image:UIImage(named: data.image!), style: .plain, target: self, action: data.action)
             buttonsArray.append(rightButton)
 
         }
@@ -138,19 +113,6 @@ class RootViewController: UIViewController {
 
             return titleView
         }
-    
-    
-//    func setLeftButton(title: String?, image: String?, action: Selector) {
-//        
-//        let button = UIButton(type: .system)
-//        button.setImage(UIImage(named: "back.png"), for: .normal)
-//        button.imageView?.contentMode = .center
-//        button.setTitle(title, for: .normal)
-//        button.sizeToFit()
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
-//        button.addTarget(self, action: action, for: .touchUpInside)
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
-//        button.addTarget(self, action: action, for: .touchUpInside)
-//        
-//    }
+
+
 }

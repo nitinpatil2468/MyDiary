@@ -52,16 +52,15 @@ class TxtImageCell: UITableViewCell {
     
     func setImage(_ urlString:String){
         print(urlString)
-  
-            let url = URL(fileURLWithPath: urlString)
-            print(url)
+        let tempDirectoryURL = NSURL.fileURL(withPath: NSTemporaryDirectory(), isDirectory: true)
+        let imageDirectory = tempDirectoryURL.appendingPathComponent(urlString)
+            print(imageDirectory)
             do{
-                let imageData = try Data(contentsOf: url)
-                let img = UIImage(data:imageData)
+                let imageData = try Data(contentsOf: imageDirectory)
+                let img = UIImage(data: imageData )
                 imgView.image = img
-
             }catch{
-                print("Error")
+                print(error.localizedDescription)
             }
     }
     
